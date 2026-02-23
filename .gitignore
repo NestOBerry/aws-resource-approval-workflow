@@ -1,0 +1,39 @@
+# Personal configuration (contains your name/prefix)
+config.json
+
+# Environment-specific files
+.env
+.env.local
+
+# AWS credentials
+.aws/
+credentials
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Node modules (if you add any JS tooling later)
+node_modules/
+
+# Temporary files
+*.tmp
+*.bak
+*~

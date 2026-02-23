@@ -1,0 +1,153 @@
+{
+  "Comment": "Email approval then launch EC2 + notify requester (Simplified for t3.micro)",
+  "StartAt": "SendApprovalEmailAndWait",
+  "States": {
+    "SendApprovalEmailAndWait": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "TimeoutSeconds": 14400,
+      "Parameters": {
+        "FunctionName": "SendApprovalEmail",
+        "Payload": {
+          "taskToken.$": "$$.Task.Token",
+          "request.$": "$"
+        }
+      },
+      "ResultPath": "$.approval",
+      "Catch": [
+        {
+          "ErrorEquals": ["RejectedByApprover"],
+          "ResultPath": "$.error",
+          "Next": "NotifyRequesterRejected"
+        },
+        {
+          "ErrorEquals": ["States.Timeout"],
+          "ResultPath": "$.error",
+          "Next": "NotifyRequesterExpired"
+        }
+      ],
+      "Next": "PrepareEC2Parameters"
+    },
+    "PrepareEC2Parameters": {
+      "Type": "Pass",
+      "Parameters": {
+        "ImageId": "ami-077dbbb6eecc8ae69",
+        "InstanceType.$": "$.instanceType",
+        "MinCount": 1,
+        "MaxCount": 1,
+        "SubnetId.$": "$.subnetId",
+        "SecurityGroupIds.$": "$.securityGroupIds",
+        "PrivateIpAddress.$": "States.Format('{}', $.privateIpAddress)",
+        "EbsVolumeSize.$": "States.Format('{}', $.ebsVolumeSize)",
+        "EbsVolumeType.$": "States.Format('{}', $.ebsVolumeType)",
+        "InstanceName.$": "$.instanceName"
+      },
+      "ResultPath": "$.ec2Params",
+      "Next": "LaunchEC2"
+    },
+    "LaunchEC2": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "LaunchEC2",
+        "Payload": {
+          "params.$": "$.ec2Params"
+        }
+      },
+      "ResultPath": "$.ec2",
+      "Next": "NotifyRequesterApproved"
+    },
+    "NotifyRequesterApproved": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "SendRequesterNotification",
+        "Payload": {
+          "requesterEmail.$": "$.requesterEmail",
+          "decision": "APPROVED",
+          "instanceName.$": "$.instanceName",
+          "instanceType.$": "$.instanceType",
+          "amiId": "ami-077dbbb6eecc8ae69",
+          "ebsVolumeSize.$": "$.ebsVolumeSize",
+          "ebsVolumeType.$": "$.ebsVolumeType",
+          "privateIpAddress.$": "$.privateIpAddress",
+          "instanceId.$": "$.ec2.Payload.Instances[0].InstanceId"
+        }
+      },
+      "ResultPath": "$.notificationResult",
+      "Next": "UpdateStatusApproved"
+    },
+    "UpdateStatusApproved": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "UpdateRequestStatus",
+        "Payload": {
+          "requestId.$": "$.requestId",
+          "decision": "APPROVED",
+          "instanceId.$": "$.ec2.Payload.Instances[0].InstanceId",
+          "amiId": "ami-077dbbb6eecc8ae69"
+        }
+      },
+      "End": true
+    },
+    "NotifyRequesterRejected": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "SendRequesterNotification",
+        "Payload": {
+          "requesterEmail.$": "$.requesterEmail",
+          "decision": "REJECTED",
+          "reason.$": "$.error.Cause",
+          "instanceName.$": "$.instanceName",
+          "instanceType.$": "$.instanceType",
+          "amiId": "ami-077dbbb6eecc8ae69"
+        }
+      },
+      "ResultPath": "$.notificationResult",
+      "Next": "UpdateStatusRejected"
+    },
+    "UpdateStatusRejected": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "UpdateRequestStatus",
+        "Payload": {
+          "requestId.$": "$.requestId",
+          "decision": "REJECTED"
+        }
+      },
+      "End": true
+    },
+    "NotifyRequesterExpired": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "SendRequesterNotification",
+        "Payload": {
+          "requesterEmail.$": "$.requesterEmail",
+          "decision": "EXPIRED",
+          "reason": "No response from approver within TTL (4 hours)",
+          "instanceName.$": "$.instanceName",
+          "instanceType.$": "$.instanceType",
+          "amiId": "ami-077dbbb6eecc8ae69"
+        }
+      },
+      "ResultPath": "$.notificationResult",
+      "Next": "UpdateStatusExpired"
+    },
+    "UpdateStatusExpired": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "UpdateRequestStatus",
+        "Payload": {
+          "requestId.$": "$.requestId",
+          "decision": "EXPIRED"
+        }
+      },
+      "End": true
+    }
+  }
+}
