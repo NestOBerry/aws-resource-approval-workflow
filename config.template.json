@@ -5,7 +5,7 @@
   },
   "naming": {
     "prefix": "YOUR_PREFIX",
-    "description": "Prefix for all AWS resources (e.g., 'dev-', 'prod-', 'ky-')"
+    "description": "Prefix for all AWS resources (e.g., 'dev-', 'prod-')"
   },
   "resources": {
     "dynamodbTable": "${prefix}EC2ApprovalRequests",
