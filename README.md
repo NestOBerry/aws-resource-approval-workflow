@@ -2,6 +2,8 @@
 
 A serverless approval workflow for AWS resource provisioning using AWS Step Functions, Lambda, and API Gateway.
 
+> **Note**: This is a completed proof-of-concept project and is no longer actively maintained. Feel free to fork and adapt for your own use.
+
 ## Overview
 
 This solution provides an email-based approval workflow for provisioning AWS resources. Currently supports EC2 instances, with extensibility for RDS databases and S3 buckets.
@@ -141,8 +143,28 @@ Navigate to DynamoDB → Tables → EC2ApprovalRequests → Explore items
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License - See [LICENSE](LICENSE) file for details. Feel free to use and modify for your own projects.
 
-## Contributing
+## Project Status
 
-Contributions welcome! Please read CONTRIBUTING.md first.
+⚠️ **This project is archived and not actively maintained.**
+
+This was developed as a proof-of-concept for AWS resource approval workflows. The code is provided as-is for educational and reference purposes. You're welcome to:
+- Fork and adapt for your own use
+- Learn from the implementation
+- Use as a starting point for your own projects
+
+## Support
+
+- 📖 [Documentation](FINAL_DEPLOYMENT_GUIDE.md)
+- 💡 For questions, feel free to open an issue (responses may be delayed)
+
+## Acknowledgments
+
+Built with AWS serverless technologies:
+- AWS Lambda
+- AWS Step Functions
+- Amazon API Gateway
+- Amazon DynamoDB
+- Amazon SES
+- Amazon S3
