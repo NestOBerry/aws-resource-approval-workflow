@@ -124,6 +124,7 @@ aws-resource-approval-workflow/
 ├── README.md                    # This file
 ├── LICENSE                      # MIT License
 ├── CONTRIBUTING.md              # Contribution guidelines
+├── requirements.txt             # Python dependencies
 │
 ├── docs/                        # Documentation
 │   ├── DEPLOYMENT.md           # Deployment guide
@@ -167,6 +168,11 @@ aws-resource-approval-workflow/
 - ✅ API Gateway with proper error handling
 
 ## Viewing Logs
+
+### Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
 ### Python Script
 ```bash

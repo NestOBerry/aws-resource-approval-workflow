@@ -160,6 +160,10 @@ curl -X POST https://YOUR_API_GATEWAY_ID.execute-api.ap-southeast-5.amazonaws.co
 
 ```
 aws-resource-approval-workflow/
+├── README.md
+├── LICENSE
+├── CONTRIBUTING.md
+├── requirements.txt            # Python dependencies
 ├── src/
 │   ├── frontend/
 │   │   ├── index.html          # Web form
