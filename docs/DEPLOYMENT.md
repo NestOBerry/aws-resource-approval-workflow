@@ -29,8 +29,8 @@ Complete guide to deploy DynamoDB logging and host the frontend on AWS.
 **Option B: Using AWS CLI**
 
 ```bash
-cd aws-ec2-approval-workflow
-aws dynamodb create-table --cli-input-json file://dynamodb/table-definition.json --region ap-southeast-5
+cd aws-resource-approval-workflow
+aws dynamodb create-table --cli-input-json file://infrastructure/dynamodb/table-definition.json --region ap-southeast-5
 ```
 
 ✅ **Table created!**
@@ -90,7 +90,7 @@ You need to add DynamoDB permissions to the Lambda execution roles.
 6. Click **Save**
 
 7. Go back to **Code** tab
-8. Replace ALL code with the code from: `lambda/RequestStarter.py` (see DYNAMODB_SETUP.md for the updated code)
+8. Replace ALL code with the code from: `src/lambda/RequestStarter.py`
 9. Click **Deploy**
 
 ✅ **Lambda updated with DynamoDB logging!**
@@ -116,7 +116,7 @@ This Lambda updates the status after approval/rejection.
 7. Click **Save**
 
 8. Go to **Code** tab
-9. Delete default code and paste code from: `lambda/UpdateRequestStatus.py`
+9. Delete default code and paste code from: `src/lambda/UpdateRequestStatus.py`
 10. Click **Deploy**
 
 ✅ **Status updater created!**
@@ -125,7 +125,7 @@ This Lambda updates the status after approval/rejection.
 
 ### Step 5: Test DynamoDB Logging
 
-1. Go to `http://localhost:8080` (your local frontend)
+1. Go to `http://localhost:8000` (your local frontend)
 2. Submit a test request
 3. Go to **DynamoDB Console**
 4. Click on `EC2ApprovalRequests` table
@@ -205,7 +205,7 @@ This Lambda updates the status after approval/rejection.
 1. Go to **Objects** tab
 2. Click **Upload**
 3. Click **Add files**
-4. Select these files from `frontend/` folder:
+4. Select these files from `src/frontend/` folder:
    - `index.html`
    - `app.js`
    - `styles.css`
@@ -215,7 +215,7 @@ This Lambda updates the status after approval/rejection.
 **Option B: Using AWS CLI**
 
 ```bash
-cd aws-ec2-approval-workflow/frontend
+cd aws-resource-approval-workflow/src/frontend
 aws s3 sync . s3://YOUR-BUCKET-NAME/ --region ap-southeast-5
 ```
 

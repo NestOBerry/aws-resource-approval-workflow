@@ -2,49 +2,51 @@
 
 ## Pre-Deployment Checklist
 
-### 1. Update Existing Lambda Functions
+### 1. Lambda Functions
 
-**Functions that need updating:**
-- ✅ `SendApprovalEmail` - Add new fields to email
-- ✅ `SendRequesterNotification` - Add new fields to notification
+**Required Lambda functions:**
+- ✅ `RequestStarter` - Receives requests, logs to DynamoDB, starts workflow
+- ✅ `SendApprovalEmail` - Sends approval email with approve/reject links
+- ✅ `ApprovalHandler` - Handles approve/reject clicks
+- ✅ `LaunchEC2` - Launches EC2 instance
+- ✅ `SendRequesterNotification` - Notifies requester of decision
+- ✅ `UpdateRequestStatus` - Updates DynamoDB status
 
-**New Lambda functions to create:**
-- ✅ `ResolveAMI` - Fetch latest AL2023 AMI
-- ✅ `LaunchEC2` - Launch EC2 with optional params
+### 2. Step Functions
 
-**Functions that stay the same:**
-- ✅ `RequestStarter` - No changes needed
-- ✅ `ApprovalHandler` - No changes needed
-
-### 2. Update Step Functions
-
-Replace the entire state machine definition with `EC2ApprovalDemo-UPDATED.json`
-
-**New states added:**
-- `ResolveAMI` - First state (new)
-- `PrepareEC2Parameters` - Before LaunchEC2 (new)
+Deploy the state machine using `src/stepfunctions/EC2ApprovalDemo-SIMPLE.json`
 
 ### 3. Required IAM Permissions
 
-Ensure Lambda execution role has:
+Ensure Lambda execution roles have appropriate permissions:
+
+**RequestStarter role:**
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "ec2:RunInstances",
-        "ec2:DescribeImages",
-        "ec2:CreateTags",
-        "ses:SendEmail",
-        "states:StartExecution",
-        "states:SendTaskSuccess",
-        "states:SendTaskFailure",
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
+      "Action": ["states:StartExecution"],
+      "Resource": "arn:aws:states:*:*:stateMachine:EC2ApprovalDemo"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["dynamodb:PutItem", "dynamodb:UpdateItem"],
+      "Resource": "arn:aws:dynamodb:*:*:table/EC2ApprovalRequests"
+    }
+  ]
+}
+```
+
+**LaunchEC2 role:**
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["ec2:RunInstances", "ec2:CreateTags"],
       "Resource": "*"
     }
   ]
@@ -56,7 +58,7 @@ Ensure Lambda execution role has:
 ### Step 1: Start Local Server
 
 ```bash
-cd aws-ec2-approval-workflow/frontend
+cd aws-resource-approval-workflow/src/frontend
 python3 -m http.server 8000
 ```
 
@@ -162,10 +164,6 @@ curl -X POST https://YOUR_API_GATEWAY/request \
 
 ### Backend Issues
 
-**Problem**: Step Functions fails at ResolveAMI
-- Check Lambda logs for `ResolveAMI`
-- Verify IAM permissions for `ec2:DescribeImages`
-
 **Problem**: Step Functions fails at LaunchEC2
 - Check Lambda logs for `LaunchEC2`
 - Verify subnet ID exists
@@ -184,8 +182,8 @@ curl -X POST https://YOUR_API_GATEWAY/request \
 Check logs for each Lambda function:
 ```bash
 aws logs tail /aws/lambda/RequestStarter --follow
-aws logs tail /aws/lambda/ResolveAMI --follow
 aws logs tail /aws/lambda/LaunchEC2 --follow
+aws logs tail /aws/lambda/SendApprovalEmail --follow
 ```
 
 ### Step Functions Execution

@@ -28,7 +28,7 @@ This solution provides an email-based approval workflow for provisioning AWS res
   - Optional: Custom EBS volume size/type
   - Optional: Private IP address assignment
 
-### Extensible For (See [CUSTOMIZATION.md](CUSTOMIZATION.md))
+### Extensible For (See [CUSTOMIZATION.md](docs/CUSTOMIZATION.md))
 - **Multiple Instance Types**: t3.small, t3.medium, etc.
 - **Windows OS**: Windows Server support
 - **RDS Databases**: MySQL, PostgreSQL provisioning
@@ -81,23 +81,23 @@ User → Web Portal → API Gateway → Lambda (RequestStarter)
 1. **Clone and Setup**
    ```bash
    git clone <repository>
-   cd aws-ec2-approval-workflow
-   cp config.template.json config.json
+   cd aws-resource-approval-workflow
+   cp infrastructure/config.template.json config.json
    # Edit config.json with your values
    ```
 
 2. **Deploy**
-   Follow the step-by-step guide in `FINAL_DEPLOYMENT_GUIDE.md`
+   Follow the step-by-step guide in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 3. **Test**
    - Open the S3-hosted website
-   - Submit a test request
+   - Submit a test EC2 request
    - Check email for approval link
-   - Verify EC2 instance launches
+   - Verify resource launches
 
 ## Configuration
 
-See `SETUP.md` for detailed configuration instructions.
+See [docs/SETUP.md](docs/SETUP.md) for detailed configuration instructions.
 
 Key configuration items:
 - AWS region and account
@@ -156,7 +156,6 @@ aws-resource-approval-workflow/
     ├── export_to_csv.py        # Export logs to CSV
     └── view_dynamodb_logs.py   # View logs in terminal
 ```
-- `DYNAMODB_SETUP.md` - DynamoDB logging setup
 
 ## Security Best Practices
 
@@ -186,7 +185,7 @@ Navigate to DynamoDB → Tables → EC2ApprovalRequests → Explore items
 
 ## Future Enhancements
 
-See [CUSTOMIZATION.md](CUSTOMIZATION.md) for detailed extension guides:
+See [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) for detailed extension guides:
 
 - [ ] Cognito authentication
 - [ ] Multiple instance types (t3.small, t3.medium, etc.)
@@ -214,7 +213,7 @@ This was developed as a proof-of-concept for AWS resource approval workflows. Th
 
 ## Support
 
-- 📖 [Documentation](FINAL_DEPLOYMENT_GUIDE.md)
+- 📖 [Documentation](docs/DEPLOYMENT.md)
 - 💡 For questions, feel free to open an issue (responses may be delayed)
 
 ## Acknowledgments

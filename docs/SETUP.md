@@ -7,7 +7,7 @@
 Copy the template and customize it:
 
 ```bash
-cp config.template.json config.json
+cp infrastructure/config.template.json config.json
 ```
 
 Then edit `config.json` with your values:
@@ -21,7 +21,7 @@ Then edit `config.json` with your values:
 ### 2. Deploy Resources
 
 Follow the deployment guides:
-- `FINAL_DEPLOYMENT_GUIDE.md` - Complete deployment steps
+- `DEPLOYMENT.md` - Complete deployment steps
 - `QUICK_REFERENCE.md` - Quick reference
 
 ### 3. Update Resource Names
@@ -36,7 +36,7 @@ When creating AWS resources, use the prefix from your `config.json`:
 
 Each team member should:
 1. Clone the repository
-2. Copy `config.template.json` to `config.json`
+2. Copy `infrastructure/config.template.json` to `config.json`
 3. Fill in their own values
 4. Never commit `config.json` to Git
 

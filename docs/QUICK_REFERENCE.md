@@ -39,7 +39,7 @@
 - **Approval Endpoint**: https://YOUR_API_GATEWAY_ID.execute-api.ap-southeast-5.amazonaws.com/approval
 
 ### Local Development
-- **Frontend**: http://localhost:8080
+- **Frontend**: http://localhost:8000
 
 ### AWS Resources
 - **Region**: ap-southeast-5
@@ -159,26 +159,35 @@ curl -X POST https://YOUR_API_GATEWAY_ID.execute-api.ap-southeast-5.amazonaws.co
 ## File Structure
 
 ```
-aws-ec2-approval-workflow/
-├── frontend/
-│   ├── index.html          # Web form
-│   ├── app.js              # Frontend logic
-│   └── styles.css          # Styling
-├── lambda/
-│   ├── RequestStarter.py
-│   ├── SendApprovalEmail.py
-│   ├── SendRequesterNotification.py
-│   ├── LaunchEC2.py
-│   ├── ApprovalHandler.py
-│   └── UpdateRequestStatus.py
-├── stepfunctions/
-│   └── EC2ApprovalDemo-SIMPLE.json
-├── dynamodb/
-│   ├── table-definition.json
-│   └── README.md
+aws-resource-approval-workflow/
+├── src/
+│   ├── frontend/
+│   │   ├── index.html          # Web form
+│   │   ├── app.js              # Frontend logic
+│   │   └── styles.css          # Styling
+│   ├── lambda/
+│   │   ├── RequestStarter.py
+│   │   ├── SendApprovalEmail.py
+│   │   ├── SendRequesterNotification.py
+│   │   ├── LaunchEC2.py
+│   │   ├── ApprovalHandler.py
+│   │   └── UpdateRequestStatus.py
+│   └── stepfunctions/
+│       └── EC2ApprovalDemo-SIMPLE.json
+├── infrastructure/
+│   ├── dynamodb/
+│   │   └── table-definition.json
+│   └── config.template.json
 ├── scripts/
-│   └── view_dynamodb_logs.py
-└── FINAL_DEPLOYMENT_GUIDE.md  # Complete deployment steps
+│   ├── view_dynamodb_logs.py
+│   └── export_to_csv.py
+└── docs/
+    ├── DEPLOYMENT.md           # Complete deployment steps
+    ├── ARCHITECTURE.md
+    ├── SETUP.md
+    ├── TESTING.md
+    ├── CUSTOMIZATION.md
+    └── QUICK_REFERENCE.md
 ```
 
 ---
@@ -207,6 +216,5 @@ aws-ec2-approval-workflow/
 ## Support
 
 For detailed deployment steps, see:
-- `FINAL_DEPLOYMENT_GUIDE.md` - Complete deployment guide
-- `DYNAMODB_SETUP.md` - DynamoDB setup details
+- `DEPLOYMENT.md` - Complete deployment guide
 - `TESTING.md` - Testing procedures
