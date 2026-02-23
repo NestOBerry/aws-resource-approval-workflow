@@ -18,7 +18,7 @@ Update `API_CONFIG.endpoint` in `app.js` with your API Gateway URL.
 - Optional fields (AMI, EBS, Private IP)
 - Error handling
 - Success/error messages
-- Cognito-ready (TODO sections marked)
+- Extensible for Cognito authentication (see ../CUSTOMIZATION.md)
 
 ## Local Testing
 

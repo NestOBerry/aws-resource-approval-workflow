@@ -21,12 +21,20 @@ This solution provides an email-based approval workflow for provisioning AWS res
 
 ## Supported Resources
 
-### Currently Implemented
+### Currently Implemented (MVP)
 - **EC2 Instances**: Full support with optional EBS and network configuration
+  - Instance type: t3.micro
+  - OS: Amazon Linux 2023 (via Golden AMI)
+  - Optional: Custom EBS volume size/type
+  - Optional: Private IP address assignment
 
-### Planned
+### Extensible For (See [CUSTOMIZATION.md](CUSTOMIZATION.md))
+- **Multiple Instance Types**: t3.small, t3.medium, etc.
+- **Windows OS**: Windows Server support
 - **RDS Databases**: MySQL, PostgreSQL provisioning
 - **S3 Buckets**: Bucket creation with policies
+- **Cognito Auth**: User authentication
+- **Cost Estimation**: Pre-approval cost calculation
 - **Other AWS Resources**: Extensible framework
 
 ## Architecture
@@ -100,10 +108,54 @@ Key configuration items:
 
 ## Documentation
 
-- `FINAL_DEPLOYMENT_GUIDE.md` - Complete deployment steps
-- `SETUP.md` - Initial setup and configuration
-- `QUICK_REFERENCE.md` - Quick reference guide
-- `TESTING.md` - Testing procedures
+| Document | Description |
+|----------|-------------|
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Complete deployment guide |
+| [SETUP.md](docs/SETUP.md) | Initial configuration |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture overview |
+| [TESTING.md](docs/TESTING.md) | Testing procedures |
+| [CUSTOMIZATION.md](docs/CUSTOMIZATION.md) | Extension and customization guide |
+| [QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md) | Quick command reference |
+
+## Project Structure
+
+```
+aws-resource-approval-workflow/
+├── README.md                    # This file
+├── LICENSE                      # MIT License
+├── CONTRIBUTING.md              # Contribution guidelines
+│
+├── docs/                        # Documentation
+│   ├── DEPLOYMENT.md           # Deployment guide
+│   ├── ARCHITECTURE.md         # Architecture overview
+│   ├── SETUP.md                # Initial setup
+│   ├── TESTING.md              # Testing guide
+│   ├── CUSTOMIZATION.md        # Extension guide
+│   └── QUICK_REFERENCE.md      # Quick reference
+│
+├── src/                         # Source code
+│   ├── lambda/                 # Lambda functions
+│   │   ├── RequestStarter.py
+│   │   ├── SendApprovalEmail.py
+│   │   ├── ApprovalHandler.py
+│   │   ├── LaunchEC2.py
+│   │   ├── SendRequesterNotification.py
+│   │   └── UpdateRequestStatus.py
+│   ├── frontend/               # Web UI
+│   │   ├── index.html
+│   │   ├── app.js
+│   │   └── styles.css
+│   └── stepfunctions/          # Step Functions definitions
+│       └── EC2ApprovalDemo-SIMPLE.json
+│
+├── infrastructure/              # Infrastructure definitions
+│   ├── dynamodb/               # DynamoDB table definition
+│   └── config.template.json    # Configuration template
+│
+└── scripts/                     # Utility scripts
+    ├── export_to_csv.py        # Export logs to CSV
+    └── view_dynamodb_logs.py   # View logs in terminal
+```
 - `DYNAMODB_SETUP.md` - DynamoDB logging setup
 
 ## Security Best Practices
@@ -134,12 +186,18 @@ Navigate to DynamoDB → Tables → EC2ApprovalRequests → Explore items
 
 ## Future Enhancements
 
+See [CUSTOMIZATION.md](CUSTOMIZATION.md) for detailed extension guides:
+
 - [ ] Cognito authentication
-- [ ] Multiple instance types
-- [ ] RDS and S3 provisioning
-- [ ] Cost estimation
-- [ ] Slack/Teams integration
+- [ ] Multiple instance types (t3.small, t3.medium, etc.)
+- [ ] Windows OS support
+- [ ] RDS database provisioning
+- [ ] S3 bucket provisioning
+- [ ] Cost estimation before approval
+- [ ] Slack/Teams notifications
 - [ ] Admin dashboard
+- [ ] Request history view
+- [ ] Multi-region support
 
 ## License
 
